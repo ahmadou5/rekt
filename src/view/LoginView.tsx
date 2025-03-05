@@ -10,6 +10,7 @@ import Loading from "../components/Loading";
 import LoginMethods from "../components/LoginMethods";
 import AccountSelection from "../components/AccountSelection";
 import CreateAccount from "../components/CreateAccount";
+import { handlePostSession } from "@/lib/helpers.lib";
 
 export default function LoginView() {
   const {
@@ -72,6 +73,7 @@ export default function LoginView() {
 
   // If user is authenticated and has selected an account, initialize session
   if (currentAccount && sessionSigs) {
+    handlePostSession(sessionSigs);
     return (
       <div className="text-white">{`${sessionSigs} -- ${currentAccount.ethAddress}`}</div>
     );
