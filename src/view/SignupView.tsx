@@ -12,7 +12,9 @@ import SignUpMethods from "../components/SignUpMethods";
 import Loading from "../components/Loading";
 import { useRouter } from "next/navigation"; // For App Router
 import Image from "next/image";
-import { handlePostSession } from "@/lib/helpers.lib";
+import { generateWrappedKey, handlePostSession } from "@/lib/helpers.lib";
+import { litNodeClient } from "@/utils/lit.utils";
+
 const stytch = createStytchUIClient(process.env.NEXT_STYTCH_PUBLIC_TOKEN || "");
 export default function SignUpView() {
   const {
@@ -84,6 +86,25 @@ export default function SignUpView() {
   }
 
   if (currentAccount && sessionSigs) {
+    const getUser = async () => {
+      try {
+        const result = await generateWrappedKey({
+          litNodeClient: litNodeClient,
+          sessionSig: sessionSigs,
+        });
+        if (result) {
+          const { pkpAddress, generatedPublicKey } = result;
+          console.log("pkp", pkpAddress);
+          console.log("pkp", generatedPublicKey);
+        } else {
+          console.error("Failed to generate wrapped key");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUser();
+
     handlePostSession(sessionSigs);
     return (
       <div className="text-white">{`${currentAccount.ethAddress} = ${sessionSigs[1].derivedVia}`}</div>

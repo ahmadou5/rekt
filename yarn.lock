@@ -1043,6 +1043,30 @@
     tslib "1.14.1"
     util "0.12.5"
 
+"@lit-protocol/encryption@7.0.7":
+  version "7.0.7"
+  resolved "https://registry.yarnpkg.com/@lit-protocol/encryption/-/encryption-7.0.7.tgz#453af6c4e4c64f2ebe538e86a603bea133980aae"
+  integrity sha512-hxjXx7c/4jtjdyYYNNZuBzdRB8x67Ohbzvc2rWJA7RZ2gdua24nRl1BjllQNss2HUCDHgI4Bkty2Di3Cvpe+ng==
+  dependencies:
+    "@ethersproject/abstract-provider" "5.7.0"
+    "@ethersproject/contracts" "5.7.0"
+    "@ethersproject/providers" "5.7.2"
+    "@lit-protocol/accs-schemas" "^0.0.23"
+    "@lit-protocol/constants" "7.0.7"
+    "@lit-protocol/contracts" "^0.0.74"
+    "@lit-protocol/logger" "7.0.7"
+    "@lit-protocol/misc" "7.0.7"
+    "@lit-protocol/types" "7.0.7"
+    "@lit-protocol/uint8arrays" "7.0.7"
+    "@openagenda/verror" "^3.1.4"
+    ajv "^8.12.0"
+    bech32 "^2.0.0"
+    depd "^2.0.0"
+    ethers "^5.7.1"
+    siwe "^2.3.2"
+    tslib "1.14.1"
+    util "0.12.5"
+
 "@lit-protocol/lit-auth-client@^7.0.7":
   version "7.0.7"
   resolved "https://registry.yarnpkg.com/@lit-protocol/lit-auth-client/-/lit-auth-client-7.0.7.tgz#47b3611c42a2421bbe46e72973822db3c4c59851"
@@ -1399,6 +1423,31 @@
     ethers "^5.7.1"
     pako "^2.1.0"
     tslib "1.14.1"
+
+"@lit-protocol/wrapped-keys@^7.0.7":
+  version "7.0.7"
+  resolved "https://registry.yarnpkg.com/@lit-protocol/wrapped-keys/-/wrapped-keys-7.0.7.tgz#58879056d9b57ee66bab84ffbda333a80bf6df71"
+  integrity sha512-TxPh+bW4ia0tGGmcLP9O0y/YxHoUX1+rStaV4nAjk3rFg2y5rGPBqqUcI9iF3WriM8/odMzAHdsob1FcEvDjDA==
+  dependencies:
+    "@ethersproject/abstract-provider" "5.7.0"
+    "@ethersproject/contracts" "5.7.0"
+    "@ethersproject/providers" "5.7.2"
+    "@lit-protocol/accs-schemas" "^0.0.23"
+    "@lit-protocol/constants" "7.0.7"
+    "@lit-protocol/contracts" "^0.0.74"
+    "@lit-protocol/encryption" "7.0.7"
+    "@lit-protocol/logger" "7.0.7"
+    "@lit-protocol/misc" "7.0.7"
+    "@lit-protocol/types" "7.0.7"
+    "@lit-protocol/uint8arrays" "7.0.7"
+    "@openagenda/verror" "^3.1.4"
+    ajv "^8.12.0"
+    bech32 "^2.0.0"
+    depd "^2.0.0"
+    ethers "^5.7.1"
+    siwe "^2.3.2"
+    tslib "1.14.1"
+    util "0.12.5"
 
 "@metamask/eth-sig-util@5.0.2":
   version "5.0.2"

@@ -15,6 +15,7 @@
     "@lit-protocol/lit-node-client": "^7.0.7",
     "@lit-protocol/pkp-ethers": "^7.0.7",
     "@lit-protocol/types": "^7.0.7",
+    "@lit-protocol/wrapped-keys": "^7.0.7",
     "@radix-ui/react-radio-group": "^1.2.3",
     "@simplewebauthn/browser": "^13.1.0",
     "@spruceid/siwe-parser": "^3.0.0",

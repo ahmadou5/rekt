@@ -1,7 +1,30 @@
-import { SessionSigs } from "@lit-protocol/types";
+import { LitNodeClient } from "@lit-protocol/lit-node-client";
+import { SessionSigs, SessionSigsMap } from "@lit-protocol/types";
 import { AuthSig } from "@lit-protocol/types";
+import { api } from "@lit-protocol/wrapped-keys";
 
+const { generatePrivateKey } = api;
 type SessionSignature = SessionSigs | AuthSig | string | undefined;
+
+export const generateWrappedKey = async ({
+  litNodeClient,
+  sessionSig,
+}: {
+  litNodeClient: LitNodeClient;
+  sessionSig: SessionSigsMap;
+}) => {
+  try {
+    const { pkpAddress, generatedPublicKey } = await generatePrivateKey({
+      pkpSessionSigs: sessionSig,
+      network: "solana",
+      memo: "This is an arbitrary string you can replace with whatever you'd like",
+      litNodeClient,
+    });
+    return { pkpAddress, generatedPublicKey };
+  } catch (error) {
+    if (error instanceof Error) console.log(error.message);
+  }
+};
 
 export const handlePostSession = (sessionSig?: SessionSignature) => {
   try {
