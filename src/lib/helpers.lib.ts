@@ -2,11 +2,20 @@ import { SessionSigs } from "@lit-protocol/types";
 
 export const handlePostSession = (sessionSig: SessionSigs) => {
   try {
-    // Send the sessionSig back to the React Native app
+    // Extract the sessionSig string
+    const sessionSigString =
+      typeof sessionSig === "string" ? sessionSig : sessionSig.sessionSig;
+
+    // Ensure we have a string before sending
+    if (!sessionSigString) {
+      throw new Error("Invalid session signature");
+    }
+
+    // Send only the string representation of the sessionSig
     window.parent.postMessage(
       JSON.stringify({
         type: "AUTH_SUCCESS",
-        sessionSig: sessionSig,
+        sessionSig: sessionSigString,
       }),
       "*"
     );
@@ -20,11 +29,9 @@ export const handlePostSession = (sessionSig: SessionSigs) => {
         }),
         "*"
       );
+      console.error("Error in handlePostSession:", error.message);
     }
-  } finally {
   }
-
-  // Send error to React Native
 };
 
 export const formatAddress = (value: string) => {
