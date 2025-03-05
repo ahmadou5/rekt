@@ -26,3 +26,7 @@ export const handlePostSession = (sessionSig: SessionSigs) => {
 
   // Send error to React Native
 };
+
+export const formatAddress = (value: string) => {
+  return value.substring(0, 7) + "......" + value.substring(value.length - 2);
+};

@@ -3,7 +3,7 @@ import * as RadioGroup from "@radix-ui/react-radio-group";
 
 import { IRelayPKP } from "@lit-protocol/types";
 import { useState } from "react";
-
+import { formatAddress } from "@/lib/helpers.lib";
 interface AccountSelectionProp {
   accounts: IRelayPKP[];
   setCurrentAccount: (account: IRelayPKP) => void;
@@ -58,7 +58,7 @@ export default function AccountSelection({
                   <RadioGroup.Indicator className="account-item__indicator" />
                 </RadioGroup.Item>
                 <label className="text-white/85" htmlFor={account.ethAddress}>
-                  {account.publicKey.toString()}
+                  {formatAddress(account.ethAddress.toString())}
                 </label>
               </div>
             ))}
