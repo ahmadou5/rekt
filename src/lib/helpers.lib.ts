@@ -5,76 +5,33 @@ type SessionSignature = SessionSigs | AuthSig | string | undefined;
 
 export const handlePostSession = (sessionSig?: SessionSignature) => {
   try {
-    // Log the entire input for debugging
+    console.log("Input sessionSig:", sessionSig);
     console.log("Input sessionSig type:", typeof sessionSig);
-    console.log("Full sessionSig:", JSON.stringify(sessionSig, null, 2));
 
-    // Handle undefined case
-    if (sessionSig === undefined) {
-      throw new Error("Session signature is undefined");
-    }
+    // Ensure we always send a string
+    const messageToSend = JSON.stringify({
+      type: "AUTH_SUCCESS",
+      sessionSig:
+        typeof sessionSig === "string"
+          ? sessionSig
+          : JSON.stringify(sessionSig),
+    });
 
-    // Extract the sessionSig string with multiple fallback methods
-    let sessionSigString: SessionSignature;
+    console.log("Message being sent:", messageToSend);
 
-    if (typeof sessionSig === "string") {
-      sessionSigString = sessionSig;
-    } else if (sessionSig && typeof sessionSig === "object") {
-      // Handle different possible object structures
-      sessionSigString =
-        (sessionSig as SessionSigs).sessionSig ||
-        (sessionSig as AuthSig).sig ||
-        (sessionSig as { sig?: string }).sig ||
-        JSON.stringify(sessionSig);
+    window.parent.postMessage(messageToSend, "*");
 
-      if (!sessionSigString) {
-        throw new Error("Unable to extract session signature from object");
-      }
-    } else {
-      throw new Error("Unable to extract session signature");
-    }
+    console.log("Message sent successfully");
+  } catch (error) {
+    console.error("Error in handlePostSession:", error);
 
-    // Validate the extracted string
-    if (
-      typeof sessionSigString !== "string" ||
-      sessionSigString.trim() === ""
-    ) {
-      throw new Error("Extracted session signature is empty");
-    }
-
-    // Send only the string representation of the sessionSig
     window.parent.postMessage(
       JSON.stringify({
-        type: "AUTH_SUCCESS",
-        sessionSig: sessionSigString,
+        type: "AUTH_ERROR",
+        error: error instanceof Error ? error.message : "Unknown error",
       }),
       "*"
     );
-
-    console.log("Authentication successful, sent sessionSig to React Native");
-    console.log("Sent sessionSig:", sessionSigString.substring(0, 50) + "...");
-  } catch (error) {
-    // Enhanced error logging
-    console.error("Full error in handlePostSession:");
-    console.error(
-      "Error type:",
-      error instanceof Error ? error.name : typeof error
-    );
-    console.error(
-      "Error message:",
-      error instanceof Error ? error.message : error
-    );
-
-    if (error instanceof Error) {
-      window.parent.postMessage(
-        JSON.stringify({
-          type: "AUTH_ERROR",
-          error: error.message,
-          originalInput: JSON.stringify(sessionSig),
-        }),
-        "*"
-      );
-    }
   }
 };
 
