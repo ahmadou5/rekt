@@ -15,7 +15,9 @@ import Image from "next/image";
 import { generateWrappedKey, handlePostSession } from "@/lib/helpers.lib";
 import { litNodeClient } from "@/utils/lit.utils";
 
-const stytch = createStytchUIClient(process.env.NEXT_STYTCH_PUBLIC_TOKEN || "");
+const stytch = createStytchUIClient(
+  process.env.NEXT_PUBLIC_STYTCH_PUBLIC_TOKEN || ""
+);
 export default function SignUpView() {
   const {
     authMethod,
