@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // For App Router
 import useAuthenticate from "../hooks/useAuthenticate";
 import useSession from "../hooks/useSession";
@@ -11,6 +11,8 @@ import LoginMethods from "../components/LoginMethods";
 import AccountSelection from "../components/AccountSelection";
 import CreateAccount from "../components/CreateAccount";
 import { handlePostSession } from "@/lib/helpers.lib";
+import { generateWrappedKey, listWrappedKeys } from "@/lib/helper.lit";
+import { StoredKeyMetadata } from "@lit-protocol/wrapped-keys";
 
 export default function LoginView() {
   const {
@@ -42,6 +44,46 @@ export default function LoginView() {
     router.push("/signup");
   }
 
+  const [addresses, setAddresses] = useState<StoredKeyMetadata[] | undefined>(
+    []
+  );
+
+  // Function to handle wrapped key generation
+
+  const handleWrappedKey = async () => {
+    try {
+      if (!sessionSigs) {
+        throw new Error("sessionSigs is undefined");
+      }
+      const wrappedKeyResponse = await generateWrappedKey(
+        sessionSigs,
+        "solana",
+        "WrappedKey for Solana"
+      );
+      console.log(
+        "Wrapped Key Response:",
+        wrappedKeyResponse?.generatedPublicKey
+      );
+    } catch (error) {
+      console.error("Error generating wrapped key:", error);
+    }
+  };
+  useEffect(() => {
+    const fetchSolAddress = async () => {
+      if (!sessionSigs) {
+        console.error("Session Sigs are not available yet.");
+        return;
+      }
+      try {
+        const solAddress = await listWrappedKeys(sessionSigs);
+        setAddresses(solAddress);
+        console.log("Solana Address:", solAddress?.length);
+      } catch (error) {
+        console.error("Error fetching Solana address:", error);
+      }
+    };
+    fetchSolAddress();
+  }, [sessionSigs]);
   useEffect(() => {
     // If user is authenticated, fetch accounts
     if (authMethod) {
@@ -75,7 +117,27 @@ export default function LoginView() {
   if (currentAccount && sessionSigs) {
     handlePostSession(sessionSigs);
     return (
-      <div className="text-white">{`${sessionSigs} -- ${currentAccount.ethAddress}`}</div>
+      <div className="text-white">
+        {`${currentAccount && currentAccount.ethAddress}`}
+        {(addresses?.length ?? 0) > 0 &&
+          addresses!.map((address, i) => (
+            <div key={i} className="text-white">
+              {address.publicKey} - {address.id}
+            </div>
+          ))}
+
+        <div className="ml-auto mr-auto mt-10 flex flex-col items-center justify-center">
+          <p className="text-white font-bold mb-12 text-xl">
+            Lets Generate a solana key for you
+          </p>
+          <button
+            onClick={() => handleWrappedKey()}
+            className="bg-white/90 mt-7 text-black rounded-lg py-2 px-3"
+          >
+            Generate a WrappedKey
+          </button>
+        </div>
+      </div>
     );
   }
 

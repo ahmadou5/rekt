@@ -1,24 +1,21 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useAuthenticate from "../hooks/useAuthenticate";
 import NavLogo from "@/assets/logo.svg";
 import useSession from "../hooks/useSession";
 import useAccounts from "../hooks/useAccounts";
-import { StytchProvider } from "@stytch/nextjs";
-import { createStytchUIClient } from "@stytch/nextjs/ui";
 
 import { AuthMethodType } from "@lit-protocol/constants";
 import SignUpMethods from "../components/SignUpMethods";
 import Loading from "../components/Loading";
 import { useRouter } from "next/navigation"; // For App Router
 import Image from "next/image";
-import { generateWrappedKey, handlePostSession } from "@/lib/helpers.lib";
-import { litNodeClient } from "@/utils/lit.utils";
+import { handlePostSession, handlePostSolanaAddress } from "@/lib/helpers.lib";
 
-const stytch = createStytchUIClient(
-  process.env.NEXT_PUBLIC_STYTCH_PUBLIC_TOKEN || ""
-);
+import { generateWrappedKey } from "@/lib/helper.lit";
+
 export default function SignUpView() {
+  const [address, setAddress] = useState<string | undefined>(undefined);
   const {
     authMethod,
 
@@ -72,7 +69,38 @@ export default function SignUpView() {
       initSession(authMethod, currentAccount);
     }
   }, [authMethod, currentAccount, initSession]);
+  useEffect(() => {}, [sessionSigs]);
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        if (!sessionSigs) {
+          throw new Error("sessionSigs is undefined");
+        }
+        const wrappedKeyResponse = await generateWrappedKey(
+          sessionSigs,
+          "solana",
+          "WrappedKey for Solana"
+        );
+        setAddress(wrappedKeyResponse?.generatedPublicKey);
+        console.log(
+          "Wrapped Key Response:",
+          wrappedKeyResponse?.generatedPublicKey
+        );
+      } catch (error) {
+        console.error("Error generating wrapped key:", error);
+      }
+    };
 
+    if (currentAccount && sessionSigs) {
+      getUser();
+      handlePostSession(sessionSigs);
+    }
+  }, [currentAccount, sessionSigs]);
+  useEffect(() => {
+    if (address) {
+      handlePostSolanaAddress(address);
+    }
+  }, [address]);
   if (authLoading) {
     return (
       <Loading copy={"Authenticating your credentials..."} error={error} />
@@ -88,50 +116,33 @@ export default function SignUpView() {
   }
 
   if (currentAccount && sessionSigs) {
-    const getUser = async () => {
-      try {
-        const result = await generateWrappedKey({
-          litNodeClient: litNodeClient,
-          sessionSig: sessionSigs,
-        });
-        if (result) {
-          const { pkpAddress, generatedPublicKey } = result;
-          console.log("pkp", pkpAddress);
-          console.log("pkp", generatedPublicKey);
-        } else {
-          console.error("Failed to generate wrapped key");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getUser();
-
-    handlePostSession(sessionSigs);
+    if (!address) {
+      return (
+        <Loading copy={"Generating your Solana address..."} error={error} />
+      );
+    }
     return (
-      <div className="text-white">{`${currentAccount.ethAddress} = ${sessionSigs[1].derivedVia}`}</div>
+      <div className="text-white">{`${currentAccount.ethAddress}- ${address} `}</div>
     );
   } else {
     return (
-      <StytchProvider stytch={stytch}>
-        <div className="h-screen w-[100%] px-2 flex flex-col items-center justify-center">
-          <div className="relative h-[10vh]">
-            <Image
-              src={NavLogo}
-              alt="InFuse Logo"
-              width={180}
-              height={180}
-              className="animate-pulse/4"
-              priority
-            />
-          </div>
-          <SignUpMethods
-            authWithStytch={authWithStytch}
-            goToLogin={() => router.push("/login")}
-            error={error}
+      <div className="h-screen w-[100%] px-2 flex flex-col items-center justify-center">
+        <div className="relative h-[10vh]">
+          <Image
+            src={NavLogo}
+            alt="InFuse Logo"
+            width={180}
+            height={180}
+            className="animate-pulse/4"
+            priority
           />
         </div>
-      </StytchProvider>
+        <SignUpMethods
+          authWithStytch={authWithStytch}
+          goToLogin={() => router.push("/login")}
+          error={error}
+        />
+      </div>
     );
   }
 }

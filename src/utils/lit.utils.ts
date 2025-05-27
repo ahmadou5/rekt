@@ -39,7 +39,7 @@ export const litNodeClient: LitNodeClient = new LitNodeClient({
   debug: true,
 });
 
-litNodeClient.connect();
+await litNodeClient.connect();
 
 const litRelay = new LitRelay({
   relayUrl: LitRelay.getRelayUrl(SELECTED_LIT_NETWORK),
@@ -271,7 +271,7 @@ export async function getSessionSigs({
     authMethods: [authMethod],
     resourceAbilityRequests: [
       {
-        resource: new LitPKPResource("*"),
+        resource: new LitPKPResource("lit-pkp"),
         ability: LIT_ABILITY.PKPSigning,
       },
     ],

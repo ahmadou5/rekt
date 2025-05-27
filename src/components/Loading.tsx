@@ -9,12 +9,12 @@ export default function Loading({ copy, error }: LoadingProps) {
       <div className="wrapper">
         {error && (
           <div className="alert alert--error">
-            <p>{error.message}</p>
+            <p className="text-white/70">{error.message}</p>
           </div>
         )}
         <div className="loader-container">
           <div className="loader"></div>
-          <p>{copy}</p>
+          <p className="text-white/70">{copy}</p>
         </div>
       </div>
     </div>
