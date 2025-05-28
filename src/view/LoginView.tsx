@@ -31,7 +31,7 @@ export default function LoginView() {
   } = useAuthenticate();
   const {
     fetchAccounts,
-    //setCurrentAccount,
+    setCurrentAccount,
     currentAccount,
     accounts,
     loading: accountsLoading,
@@ -161,15 +161,7 @@ export default function LoginView() {
 
   // If user is authenticated and has more than 1 account, show account selection
   if (authMethod && accounts.length > 0) {
-    return (
-      <div>
-        {/**<AccountSelection
-        accounts={accounts}
-        setCurrentAccount={setCurrentAccount}
-        error={error}
-      /> */}
-      </div>
-    );
+    setCurrentAccount(accounts[0]); // Set the first account as current
   }
 
   // If user is authenticated but has no accounts, prompt to create an account
