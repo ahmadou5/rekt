@@ -35,7 +35,7 @@ export default function AccountSelection({
         <p className="text-white/70 mt-3 text-lg font-medium">
           Continue with one of your accounts.
         </p>
-        <form onSubmit={handleSubmit} className="">
+        <form onSubmit={handleSubmit} className="py-4 px-2">
           <RadioGroup.Root
             className="accounts-wrapper"
             defaultValue="0"

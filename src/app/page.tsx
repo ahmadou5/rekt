@@ -12,9 +12,10 @@ const Page: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (pathname === "/") {
+        console.log("Redirecting to login page");
         router.push("/login");
       }
-    }, 100);
+    }, 1000);
     return () => clearTimeout(timer);
   }, [pathname, router]);
 

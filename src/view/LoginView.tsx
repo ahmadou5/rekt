@@ -78,7 +78,7 @@ export default function LoginView() {
   useEffect(() => {
     const fetchSolAddress = async () => {
       if (!sessionSigs) {
-        console.error("Session Sigs are not available yet.");
+        //console.error("Session Sigs are not available yet.");
         return;
       }
       try {

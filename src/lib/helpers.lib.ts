@@ -116,7 +116,7 @@ export const handlePostEmail = (email?: string) => {
     // Ensure we always send a string
     const messageToSend = JSON.stringify({
       type: "EMAIL_ADDRESS",
-      solanaAddress: typeof email === "string" ? email : JSON.stringify(email),
+      emailAddress: typeof email === "string" ? email : JSON.stringify(email),
     });
 
     console.log("Message being sent:", messageToSend);
