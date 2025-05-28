@@ -3,6 +3,7 @@ import { useState } from "react";
 import { StytchProvider, useStytch } from "@stytch/nextjs";
 import { createStytchUIClient } from "@stytch/nextjs/ui";
 import Toaster from "./ui/toaster";
+import { useUserStore } from "../../store/UserStore";
 
 type AuthView = "default" | "email" | "phone" | "wallet" | "webauthn";
 interface StytchOTPProps {
@@ -29,6 +30,7 @@ const stytch = createStytchUIClient(
  * One-time passcodes can be sent via phone number through Stytch
  */
 const StytchOTP = ({ method, authWithStytch, setView }: StytchOTPProps) => {
+  const { setUserEmail } = useUserStore();
   const [step, setStep] = useState<OtpStep>("submit");
   const [userId, setUserId] = useState<string>("");
   const [methodId, setMethodId] = useState<string>("");
@@ -138,7 +140,10 @@ const StytchOTP = ({ method, authWithStytch, setView }: StytchOTPProps) => {
                 <input
                   id={method}
                   value={userId}
-                  onChange={(e) => setUserId(e.target.value)}
+                  onChange={(e) => {
+                    setUserId(e.target.value);
+                    setUserEmail(e.target.value);
+                  }}
                   type={method === "email" ? "email" : "tel"}
                   name={method}
                   className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500/70 transition-all"

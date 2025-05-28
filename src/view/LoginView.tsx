@@ -10,11 +10,18 @@ import Loading from "../components/Loading";
 import LoginMethods from "../components/LoginMethods";
 import AccountSelection from "../components/AccountSelection";
 import CreateAccount from "../components/CreateAccount";
-import { handlePostSession } from "@/lib/helpers.lib";
+import {
+  handlePostEmail,
+  handlePostIsLogin,
+  handlePostSession,
+  handlePostSolanaAddress,
+} from "@/lib/helpers.lib";
 import { generateWrappedKey, listWrappedKeys } from "@/lib/helper.lit";
 import { StoredKeyMetadata } from "@lit-protocol/wrapped-keys";
+import { useUserStore } from "../../store/UserStore";
 
 export default function LoginView() {
+  const { userEmail } = useUserStore();
   const {
     authMethod,
 
@@ -114,29 +121,40 @@ export default function LoginView() {
   }
 
   // If user is authenticated and has selected an account, initialize session
-  if (currentAccount && sessionSigs) {
+  if (currentAccount && sessionSigs && (addresses?.length ?? 0) > 0) {
+    handlePostSolanaAddress(addresses![0].publicKey);
     handlePostSession(sessionSigs);
+    handlePostEmail(userEmail || "");
+    handlePostIsLogin(true);
     return (
       <div className="text-white">
-        {`${currentAccount && currentAccount.ethAddress}`}
+        {userEmail && (
+          <div className="text-white mb-4 ml-auto mr-auto">
+            Logged in as: {userEmail}
+          </div>
+        )}
         {(addresses?.length ?? 0) > 0 &&
           addresses!.map((address, i) => (
-            <div key={i} className="text-white">
-              {address.publicKey} - {address.id}
+            <div
+              key={i}
+              className="text-white ml-auto mr-auto text-3xl font-bold mt-2"
+            >
+              {address.publicKey}
             </div>
           ))}
-
-        <div className="ml-auto mr-auto mt-10 flex flex-col items-center justify-center">
-          <p className="text-white font-bold mb-12 text-xl">
-            Lets Generate a solana key for you
-          </p>
-          <button
-            onClick={() => handleWrappedKey()}
-            className="bg-white/90 mt-7 text-black rounded-lg py-2 px-3"
-          >
-            Generate a WrappedKey
-          </button>
-        </div>
+        {addresses?.length === 0 && (
+          <div className="ml-auto mr-auto mt-10 flex flex-col items-center justify-center">
+            <p className="text-white font-bold mb-12 text-xl">
+              Lets Generate a solana key for you
+            </p>
+            <button
+              onClick={() => handleWrappedKey()}
+              className="bg-white/90 mt-7 text-black rounded-lg py-2 px-3"
+            >
+              Generate a WrappedKey
+            </button>
+          </div>
+        )}
       </div>
     );
   }

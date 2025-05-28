@@ -1,7 +1,6 @@
-import { LitNodeClient } from "@lit-protocol/lit-node-client";
-import { SessionSigs, SessionSigsMap } from "@lit-protocol/types";
+import { SessionSigs } from "@lit-protocol/types";
 import { AuthSig } from "@lit-protocol/types";
-import { api, config } from "@lit-protocol/wrapped-keys";
+import { config } from "@lit-protocol/wrapped-keys";
 // import all lit actions cod
 // or import individual lit actions
 import {
@@ -18,26 +17,32 @@ config.setLitActionsCode({
     solana: generateEncryptedSolanaPrivateKey.code,
   },
 });
-const { generatePrivateKey } = api;
+
 type SessionSignature = SessionSigs | AuthSig | string | undefined;
 
-export const generateWrappedKey = async ({
-  litNodeClient,
-  sessionSig,
-}: {
-  litNodeClient: LitNodeClient;
-  sessionSig: SessionSigsMap;
-}) => {
+export const handlePostIsLogin = (login?: boolean) => {
   try {
-    const { pkpAddress, generatedPublicKey } = await generatePrivateKey({
-      pkpSessionSigs: sessionSig,
-      network: "solana",
-      memo: "This is an arbitrary string you can replace with whatever you'd like",
-      litNodeClient: litNodeClient,
+    // Ensure we always send a string
+    const messageToSend = JSON.stringify({
+      type: "IS_LOGIN",
+      login: typeof login === "string" ? login : JSON.stringify(login),
     });
-    return { pkpAddress, generatedPublicKey };
+
+    console.log("Message being sent:", messageToSend);
+
+    window.parent.postMessage(messageToSend, "*");
+
+    console.log("Message sent successfully");
   } catch (error) {
-    if (error instanceof Error) console.log(error.message);
+    console.error("Error in log:", error);
+
+    window.parent.postMessage(
+      JSON.stringify({
+        type: "LOGIN_ERROR",
+        error: error instanceof Error ? error.message : "Unknown error",
+      }),
+      "*"
+    );
   }
 };
 
@@ -80,8 +85,8 @@ export const handlePostSolanaAddress = (address?: string) => {
 
     // Ensure we always send a string
     const messageToSend = JSON.stringify({
-      type: "AUTH_SUCCESS",
-      sessionSig:
+      type: "SOLANA_ADDRESS",
+      solanaAddress:
         typeof address === "string" ? address : JSON.stringify(address),
     });
 
@@ -95,7 +100,36 @@ export const handlePostSolanaAddress = (address?: string) => {
 
     window.parent.postMessage(
       JSON.stringify({
-        type: "AUTH_ERROR",
+        type: "SOLANA_ADDRESS_ERROR",
+        error: error instanceof Error ? error.message : "Unknown error",
+      }),
+      "*"
+    );
+  }
+};
+
+export const handlePostEmail = (email?: string) => {
+  try {
+    console.log("Input Email Address:", email);
+    //console.log("Input  type:", typeof String(address));
+
+    // Ensure we always send a string
+    const messageToSend = JSON.stringify({
+      type: "EMAIL_ADDRESS",
+      solanaAddress: typeof email === "string" ? email : JSON.stringify(email),
+    });
+
+    console.log("Message being sent:", messageToSend);
+
+    window.parent.postMessage(messageToSend, "*");
+
+    console.log("Message sent successfully");
+  } catch (error) {
+    console.error("Error in handlePostSession:", error);
+
+    window.parent.postMessage(
+      JSON.stringify({
+        type: "EMAIL_ADDRESS_ERROR",
         error: error instanceof Error ? error.message : "Unknown error",
       }),
       "*"
