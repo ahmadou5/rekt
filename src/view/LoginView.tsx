@@ -161,13 +161,15 @@ export default function LoginView() {
 
   // If user is authenticated and has more than 1 account, show account selection
   if (authMethod && accounts.length > 0) {
-    return {
-      /**<AccountSelection
+    return (
+      <div>
+        {/**<AccountSelection
         accounts={accounts}
         setCurrentAccount={setCurrentAccount}
         error={error}
-      /> */
-    };
+      /> */}
+      </div>
+    );
   }
 
   // If user is authenticated but has no accounts, prompt to create an account
