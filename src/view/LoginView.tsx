@@ -8,7 +8,7 @@ import NavLogo from "@/assets/logo.svg";
 import Image from "next/image";
 import Loading from "../components/Loading";
 import LoginMethods from "../components/LoginMethods";
-import AccountSelection from "../components/AccountSelection";
+//import AccountSelection from "../components/AccountSelection";
 import CreateAccount from "../components/CreateAccount";
 import {
   handlePostEmail,
@@ -31,7 +31,7 @@ export default function LoginView() {
   } = useAuthenticate();
   const {
     fetchAccounts,
-    setCurrentAccount,
+    //setCurrentAccount,
     currentAccount,
     accounts,
     loading: accountsLoading,
@@ -161,13 +161,13 @@ export default function LoginView() {
 
   // If user is authenticated and has more than 1 account, show account selection
   if (authMethod && accounts.length > 0) {
-    return (
-      <AccountSelection
+    return {
+      /**<AccountSelection
         accounts={accounts}
         setCurrentAccount={setCurrentAccount}
         error={error}
-      />
-    );
+      /> */
+    };
   }
 
   // If user is authenticated but has no accounts, prompt to create an account

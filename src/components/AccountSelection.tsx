@@ -15,11 +15,11 @@ export default function AccountSelection({
   setCurrentAccount,
   error,
 }: AccountSelectionProp) {
-  const [selectedValue, setSelectedValue] = useState<string>("0");
+  const [selectedValue, setSelectedValue] = useState<string>("1");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const account = accounts[parseInt(selectedValue)];
+    const account = accounts[parseInt("1")];
     return setCurrentAccount(account);
   }
 
