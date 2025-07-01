@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import useAuthenticate from "../hooks/useAuthenticate";
-import NavLogo from "@/assets/logo.svg";
+
 import useSession from "../hooks/useSession";
 import useAccounts from "../hooks/useAccounts";
 
@@ -9,10 +9,11 @@ import { AuthMethodType } from "@lit-protocol/constants";
 import SignUpMethods from "../components/SignUpMethods";
 import Loading from "../components/Loading";
 import { useRouter } from "next/navigation"; // For App Router
-import Image from "next/image";
+
 import { handlePostSession, handlePostSolanaAddress } from "@/lib/helpers.lib";
 
 import { generateWrappedKey } from "@/lib/helper.lit";
+import { LucideVerified } from "lucide-react";
 
 export default function SignUpView() {
   const [address, setAddress] = useState<string | undefined>(undefined);
@@ -69,7 +70,7 @@ export default function SignUpView() {
       initSession(authMethod, currentAccount);
     }
   }, [authMethod, currentAccount, initSession]);
-  useEffect(() => {}, [sessionSigs]);
+
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -103,40 +104,47 @@ export default function SignUpView() {
   }, [address]);
   if (authLoading) {
     return (
-      <Loading copy={"Authenticating your credentials..."} error={error} />
+      <div className="flex items-center justify-center flex-col h-screen w-[100%] px-2">
+        <Loading copy={"Authenticating your credentials..."} error={error} />
+      </div>
     );
   }
 
   if (accountsLoading) {
-    return <Loading copy={"Creating your account..."} error={error} />;
+    return (
+      <div className="flex items-center justify-center flex-col h-screen w-[100%] px-2">
+        <Loading copy={"Creating your account..."} error={error} />;
+      </div>
+    );
   }
 
   if (sessionLoading) {
-    return <Loading copy={"Securing your session..."} error={error} />;
+    return (
+      <div className="flex items-center justify-center flex-col h-screen w-[100%] px-2">
+        <Loading copy={"Securing your session..."} error={error} />;
+      </div>
+    );
   }
 
   if (currentAccount && sessionSigs) {
     if (!address) {
       return (
-        <Loading copy={"Generating your Solana address..."} error={error} />
+        <div className="flex items-center justify-center flex-col h-screen w-[100%] px-2">
+          <Loading copy={"Generating your Solana address..."} error={error} />
+        </div>
       );
     }
     return (
-      <div className="text-white">{`${currentAccount.ethAddress}- ${address} `}</div>
+      <div className="text-white  flex items-center justify-center flex-col h-screen w-[100%] px-2">
+        <LucideVerified size={60} color="green" />
+        <div className="text-white ml-auto mr-auto text-3xl font-bold mt-2">
+          <p className="text-white/80 font-bold text-2xl">Session Granted</p>
+        </div>
+      </div>
     );
   } else {
     return (
-      <div className="h-screen w-[100%] px-2 flex flex-col items-center justify-center">
-        <div className="relative h-[10vh]">
-          <Image
-            src={NavLogo}
-            alt="InFuse Logo"
-            width={180}
-            height={180}
-            className="animate-pulse/4"
-            priority
-          />
-        </div>
+      <div className="h-[100%] flex items-center justify-center w-[100%] ml-auto mr-auto">
         <SignUpMethods
           authWithStytch={authWithStytch}
           goToLogin={() => router.push("/login")}

@@ -31,19 +31,19 @@ export const ORIGIN =
 
 export const SELECTED_LIT_NETWORK = ((process.env
   .NEXT_PUBLIC_LIT_NETWORK as string) ||
-  LIT_NETWORK.DatilDev) as LIT_NETWORKS_KEYS;
+  LIT_NETWORK.Datil) as LIT_NETWORKS_KEYS;
 
 export const litNodeClient: LitNodeClient = new LitNodeClient({
   alertWhenUnauthorized: false,
   litNetwork: SELECTED_LIT_NETWORK,
-  debug: true,
+  debug: false,
 });
 
 await litNodeClient.connect();
 
 const litRelay = new LitRelay({
   relayUrl: LitRelay.getRelayUrl(SELECTED_LIT_NETWORK),
-  relayApiKey: "test-api-key",
+  relayApiKey: process.env.NEXT_PUBLIC_LIT_NETWORK_KEY || "",
 });
 
 /**

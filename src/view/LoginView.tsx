@@ -4,11 +4,8 @@ import { useRouter } from "next/navigation"; // For App Router
 import useAuthenticate from "../hooks/useAuthenticate";
 import useSession from "../hooks/useSession";
 import useAccounts from "../hooks/useAccounts";
-import NavLogo from "@/assets/logo.svg";
-import Image from "next/image";
 import Loading from "../components/Loading";
 import LoginMethods from "../components/LoginMethods";
-import AccountSelection from "../components/AccountSelection";
 import CreateAccount from "../components/CreateAccount";
 import {
   handlePostEmail,
@@ -16,9 +13,10 @@ import {
   handlePostSession,
   handlePostSolanaAddress,
 } from "@/lib/helpers.lib";
-import { generateWrappedKey, listWrappedKeys } from "@/lib/helper.lit";
+import { listWrappedKeys } from "@/lib/helper.lit";
 import { StoredKeyMetadata } from "@lit-protocol/wrapped-keys";
 import { useUserStore } from "../../store/UserStore";
+import { LucideVerified } from "lucide-react";
 
 export default function LoginView() {
   const { userEmail } = useUserStore();
@@ -57,24 +55,6 @@ export default function LoginView() {
 
   // Function to handle wrapped key generation
 
-  const handleWrappedKey = async () => {
-    try {
-      if (!sessionSigs) {
-        throw new Error("sessionSigs is undefined");
-      }
-      const wrappedKeyResponse = await generateWrappedKey(
-        sessionSigs,
-        "solana",
-        "WrappedKey for Solana"
-      );
-      console.log(
-        "Wrapped Key Response:",
-        wrappedKeyResponse?.generatedPublicKey
-      );
-    } catch (error) {
-      console.error("Error generating wrapped key:", error);
-    }
-  };
   useEffect(() => {
     const fetchSolAddress = async () => {
       if (!sessionSigs) {
@@ -108,16 +88,26 @@ export default function LoginView() {
 
   if (authLoading) {
     return (
-      <Loading copy={"Authenticating your credentials..."} error={error} />
+      <div className="flex items-center justify-center flex-col h-screen w-[100%] px-2">
+        <Loading copy={"Authenticating your credentials..."} error={error} />
+      </div>
     );
   }
 
   if (accountsLoading) {
-    return <Loading copy={"Looking up your accounts..."} error={error} />;
+    return (
+      <div className="flex items-center justify-center flex-col h-screen w-[100%] px-2">
+        <Loading copy={"Looking up your accounts..."} error={error} />;
+      </div>
+    );
   }
 
   if (sessionLoading) {
-    return <Loading copy={"Securing your session..."} error={error} />;
+    return (
+      <div className="flex items-center justify-center flex-col h-screen w-[100%] px-2">
+        <Loading copy={"Initializing your session..."} error={error} />
+      </div>
+    );
   }
 
   // If user is authenticated and has selected an account, initialize session
@@ -127,46 +117,26 @@ export default function LoginView() {
     handlePostEmail(userEmail || "");
     handlePostIsLogin(true);
     return (
-      <div className="text-white">
-        {userEmail && (
-          <div className="text-white mb-4 ml-auto mr-auto">
-            Logged in as: {userEmail}
-          </div>
-        )}
-        {(addresses?.length ?? 0) > 0 &&
-          addresses!.map((address, i) => (
-            <div
-              key={i}
-              className="text-white ml-auto mr-auto text-3xl font-bold mt-2"
-            >
-              {address.publicKey}
-            </div>
-          ))}
-        {addresses?.length === 0 && (
-          <div className="ml-auto mr-auto mt-10 flex flex-col items-center justify-center">
-            <p className="text-white font-bold mb-12 text-xl">
-              Lets Generate a solana key for you
-            </p>
-            <button
-              onClick={() => handleWrappedKey()}
-              className="bg-white/90 mt-7 text-black rounded-lg py-2 px-3"
-            >
-              Generate a WrappedKey
-            </button>
-          </div>
-        )}
+      <div className="text-white  flex items-center justify-center flex-col h-screen w-[100%] px-2">
+        <LucideVerified size={60} color="green" />
+
+        <div className="text-white ml-auto mr-auto text-3xl font-bold mt-2">
+          <p className="text-white/80 font-bold text-2xl">Session Granted</p>
+        </div>
       </div>
     );
   }
 
-  // If user is authenticated and has more than 1 account, show account selection
+  // If user is authenticated and has more than 1 account, choose his first account
   if (authMethod && accounts.length > 0) {
+    // If no account is selected, default to the first account
+    if (!currentAccount) {
+      setCurrentAccount(accounts[0]);
+    }
     return (
-      <AccountSelection
-        accounts={accounts}
-        setCurrentAccount={setCurrentAccount}
-        error={error}
-      />
+      <div className=" flex items-center justify-center flex-col h-screen w-[100%] px-2">
+        <Loading copy={"Validating Account..."} error={error} />;
+      </div>
     );
   }
 
@@ -177,17 +147,7 @@ export default function LoginView() {
 
   // If user is not authenticated, show login methods
   return (
-    <div className="h-screen w-[100%] px-2 flex flex-col items-center justify-center">
-      <div className="relative h-[13vh]">
-        <Image
-          src={NavLogo}
-          alt="InFuse Logo"
-          width={180}
-          height={180}
-          className="animate-pulse/4"
-          priority
-        />
-      </div>
+    <div className="h-[100%] flex items-center justify-center w-[100%] ml-auto mr-auto">
       <LoginMethods
         authWithStytch={authWithStytch}
         signUp={goToSignUp}

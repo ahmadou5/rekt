@@ -39,7 +39,7 @@ export default function useSession() {
         });
 
         setSessionSigs(sessionSigs);
-        console.log("Session sigs for nodes:", Object.keys(sessionSigs));
+        // console.log("Session sigs for nodes:", Object.keys(sessionSigs));
       } catch (err) {
         setError(err as Error);
       } finally {

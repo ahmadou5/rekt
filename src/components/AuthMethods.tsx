@@ -1,12 +1,13 @@
 type AuthView = "default" | "email" | "phone" | "wallet" | "webauthn";
 interface AuthMethodsProps {
   setView: React.Dispatch<React.SetStateAction<AuthView>>;
+  isSignup?: boolean;
 }
 
-const AuthMethods = ({ setView }: AuthMethodsProps) => {
+const AuthMethods = ({ setView, isSignup }: AuthMethodsProps) => {
   return (
     <>
-      <div className="bg-white p-1.5 mt-9 h-12 rounded-xl mb-4">
+      <div className="bg-white/90 p-1.5 w-[80%] ml-auto mr-auto mt-9 h-12 rounded-xl mb-4">
         <button
           type="button"
           className="btn btn--outline flex justify-between items-center w-full"
@@ -28,7 +29,7 @@ const AuthMethods = ({ setView }: AuthMethodsProps) => {
             </svg>
           </div>
           <span className=" text-black ml-auto font-light mr-2 text-md">
-            Continue with email
+            {isSignup ? "Create account" : "Continue"} with Email
           </span>
         </button>
       </div>

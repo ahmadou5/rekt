@@ -30,8 +30,8 @@ export default function SignUpMethods({
     }
   }, []);
   return (
-    <div className="container">
-      <div className="wrapper">
+    <div className="w-[100%] h-[100%] ml-auto mr-auto ">
+      <div className="w-[100%] h-[100%] ml-auto mr-auto flex items-center justify-center flex-col">
         {error && (
           <Toaster
             isToastOpen={isToast}
@@ -41,13 +41,13 @@ export default function SignUpMethods({
           />
         )}
         {view === "default" && (
-          <>
+          <div className="flex items-center mt-8 justify-center flex-col h-auto p-5 bg-white/0 rounded-3xl w-[100%] px-1">
             <h1 className="text-white/90 text-2xl">Get started</h1>
-            <p className="text-white/70 mt-2 text-lg font-medium">
+            <div className="text-white/70 mt-3 text-lg font-medium px-4 text-center">
               Create a smart wallet that is secured by accounts you already
               have.
-            </p>
-            <AuthMethods setView={setView} />
+            </div>
+            <AuthMethods setView={setView} isSignup={true} />
 
             <div className="mt-12">
               <button
@@ -60,14 +60,17 @@ export default function SignUpMethods({
                 </p>
               </button>
             </div>
-          </>
+          </div>
         )}
         {view === "email" && (
-          <StytchOTP
-            method={"email"}
-            authWithStytch={authWithStytch}
-            setView={setView}
-          />
+          <div className=" h-auto w-[90%] px-2 py-4 rounded-lg">
+            <StytchOTP
+              method={"email"}
+              authWithStytch={authWithStytch}
+              setView={setView}
+              isSignup={true}
+            />
+          </div>
         )}
         {view === "phone" && (
           <StytchOTP

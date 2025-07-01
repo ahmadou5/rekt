@@ -33,8 +33,8 @@ export default function LoginMethods({
     }
   }, []);
   return (
-    <div className="container ">
-      <div className="wrapper">
+    <div className="w-[100%] h-[100%] ml-auto mr-auto ">
+      <div className="w-[100%] h-[100%] ml-auto mr-auto flex items-center justify-center flex-col">
         {error && (
           <Toaster
             isToastOpen={isToast}
@@ -45,13 +45,13 @@ export default function LoginMethods({
         )}
 
         {view === "default" && (
-          <>
+          <div className="flex items-center mt-8 justify-center flex-col h-auto p-5 bg-white/0 rounded-3xl w-[100%] px-1">
             <h1 className="text-white/90 text-2xl">Welcome Back</h1>
-            <p className="text-white/70 mt-3 text-lg font-medium">
+            <div className="text-white/70 mt-3 text-lg font-medium">
               Get access to your wallet.
-            </p>
+            </div>
             <AuthMethods setView={setView} />
-            <div className="mt-12">
+            <div className="mt-12 w-[100%] flex items-center justify-center">
               <button
                 className="text-white w-[100%] text-xl flex items-center justify-center font-extralight"
                 onClick={signUp}
@@ -61,14 +61,17 @@ export default function LoginMethods({
                 </p>
               </button>
             </div>
-          </>
+          </div>
         )}
         {view === "email" && (
-          <StytchOTP
-            method={"email"}
-            authWithStytch={authWithStytch}
-            setView={setView}
-          />
+          <div className=" h-auto w-[90%] px-2 py-4 rounded-lg">
+            <StytchOTP
+              method={"email"}
+              authWithStytch={authWithStytch}
+              setView={setView}
+              isSignup={false}
+            />
+          </div>
         )}
 
         {view === "phone" && (
