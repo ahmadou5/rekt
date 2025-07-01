@@ -46,10 +46,8 @@ export default function LoginMethods({
 
         {view === "default" && (
           <div className="flex items-center mt-8 justify-center flex-col h-auto p-5 bg-white/0 rounded-3xl w-[100%] px-1">
-            <h1 className="text-white/90 text-2xl">Welcome Back</h1>
-            <div className="text-white/70 mt-3 text-lg font-medium">
-              Get access to your wallet.
-            </div>
+            <h1 className="text-white/90 text-2xl">Access your wallet.</h1>
+            <div className="text-white/70 mt-3 text-lg font-medium"></div>
             <AuthMethods setView={setView} />
             <div className="mt-12 w-[100%] flex items-center justify-center">
               <button

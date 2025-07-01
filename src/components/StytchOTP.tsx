@@ -403,10 +403,10 @@ const StytchOTP = ({ method, authWithStytch, isSignup }: StytchOTPProps) => {
               {/* Verification Form */}
               <form
                 onSubmit={authenticate}
-                className="flex flex-col items-center justify-center"
+                className="flex flex-col items-center px-1 justify-center"
               >
                 {/* Digit Input Boxes */}
-                <div className="flex justify-center mb-9 gap-3">
+                <div className="flex justify-center mb-9 lg:gap-3 gap-2">
                   {code.map((digit, index) => (
                     <input
                       key={index}
@@ -420,7 +420,7 @@ const StytchOTP = ({ method, authWithStytch, isSignup }: StytchOTPProps) => {
                       onChange={(e) => handleDigitChange(index, e.target.value)}
                       onKeyDown={(e) => handleKeyDown(index, e)}
                       onPaste={index === 0 ? handlePaste : undefined}
-                      className="w-14 h-14 text-center text-white text-xl font-medium bg-gray-900 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      className="w-10 h-10 lg:w-14 lg:h-14 text-center text-white text-xl font-medium bg-gray-900 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                       autoComplete="off"
                       aria-label={`Digit ${index + 1}`}
                     />
