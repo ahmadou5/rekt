@@ -10,23 +10,28 @@ import SignUpMethods from "../components/SignUpMethods";
 import Loading from "../components/Loading";
 import { useRouter } from "next/navigation"; // For App Router
 
-import { handlePostSession, handlePostSolanaAddress } from "@/lib/helpers.lib";
+import {
+  handlePostSession,
+  handlePostSolanaAddress,
+  handlePostEmail,
+  handlePostIsLogin,
+} from "@/lib/helpers.lib";
 
 import { generateWrappedKey } from "@/lib/helper.lit";
 import { LucideVerified } from "lucide-react";
+import { useUserStore } from "../../store/UserStore";
 
 export default function SignUpView() {
   const [address, setAddress] = useState<string | undefined>(undefined);
+  const { userEmail } = useUserStore();
   const {
     authMethod,
-
     authWithStytch,
     loading: authLoading,
     error: authError,
   } = useAuthenticate();
   const {
     createAccount,
-
     currentAccount,
     loading: accountsLoading,
     error: accountsError,
@@ -95,6 +100,8 @@ export default function SignUpView() {
     if (currentAccount && sessionSigs) {
       getUser();
       handlePostSession(sessionSigs);
+      handlePostEmail(userEmail || "");
+      handlePostIsLogin(false);
     }
   }, [currentAccount, sessionSigs]);
   useEffect(() => {
