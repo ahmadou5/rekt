@@ -17,6 +17,7 @@ import { listWrappedKeys } from "@/lib/helper.lit";
 import { StoredKeyMetadata } from "@lit-protocol/wrapped-keys";
 import { useUserStore } from "../../store/UserStore";
 import { LucideVerified } from "lucide-react";
+import { UserService } from "@/lib/services/user.service";
 
 export default function LoginView() {
   const { userEmail } = useUserStore();
@@ -52,6 +53,29 @@ export default function LoginView() {
   const [addresses, setAddresses] = useState<StoredKeyMetadata[] | undefined>(
     []
   );
+
+  const createUser = async (email: string) => {
+    try {
+      const userData = await UserService.GetUserByMail(email);
+
+      if (userData.success && userData.data) {
+        console.log("User already exists:", userData.data);
+        return userData.data;
+      } else {
+        const newUser = await UserService.CreateUser({
+          username: email.split("@")[0],
+          email: email,
+          address: addresses![0].publicKey || "",
+          pin: "",
+        });
+        console.log("New user created:", newUser);
+        return newUser;
+      }
+    } catch (error) {
+      console.error("Error creating user:", error);
+      throw new Error("Failed to create user");
+    }
+  };
 
   // Function to handle wrapped key generation
 
@@ -116,6 +140,7 @@ export default function LoginView() {
     handlePostSession(sessionSigs);
     handlePostEmail(userEmail || "");
     handlePostIsLogin(true);
+    createUser(userEmail || "");
     return (
       <div className="text-white  flex items-center justify-center flex-col h-screen w-[100%] px-2">
         <LucideVerified size={60} color="green" />
