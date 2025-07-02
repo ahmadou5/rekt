@@ -20,7 +20,7 @@ export default function SplashScreen() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(false);
-    }, 200); // Adjust timing as needed
+    }, 20); // Adjust timing as needed
 
     return () => clearTimeout(timer);
   }, []);

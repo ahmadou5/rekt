@@ -20,6 +20,7 @@ import {
 import { generateWrappedKey } from "@/lib/helper.lit";
 import { LucideVerified } from "lucide-react";
 import { useUserStore } from "../../store/UserStore";
+import { UserService } from "@/lib/services/user.service";
 
 export default function SignUpView() {
   const [address, setAddress] = useState<string | undefined>(undefined);
@@ -59,6 +60,29 @@ export default function SignUpView() {
       console.error("Session error:", sessionError);
     }
   }
+
+  const createUser = async (email: string) => {
+    try {
+      const userData = await UserService.GetUserByMail(email);
+
+      if (userData.success && userData.data) {
+        console.log("User already exists:", userData.data);
+        return userData.data;
+      } else {
+        const newUser = await UserService.CreateUser({
+          username: email.split("@")[0],
+          email: email,
+          address: address || "",
+          pin: "",
+        });
+        console.log("New user created:", newUser);
+        return newUser;
+      }
+    } catch (error) {
+      console.error("Error creating user:", error);
+      throw new Error("Failed to create user");
+    }
+  };
 
   useEffect(() => {
     // If user is authenticated, create an account
@@ -102,6 +126,13 @@ export default function SignUpView() {
       handlePostSession(sessionSigs);
       handlePostEmail(userEmail || "");
       handlePostIsLogin(false);
+      createUser(userEmail || "")
+        .then((user) => {
+          console.log("User created or fetched:", user);
+        })
+        .catch((error) => {
+          console.error("Error in user creation:", error);
+        });
     }
   }, [currentAccount, sessionSigs]);
   useEffect(() => {
