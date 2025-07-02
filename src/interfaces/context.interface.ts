@@ -1,4 +1,3 @@
-import { UserInterface } from ".";
 import { Dispatch, SetStateAction } from "react";
 import { Network, TokenAsset, UserProfile } from "./models.interface";
 

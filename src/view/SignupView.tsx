@@ -126,13 +126,7 @@ export default function SignUpView() {
       handlePostSession(sessionSigs);
       handlePostEmail(userEmail || "");
       handlePostIsLogin(false);
-      createUser(userEmail || "")
-        .then((user) => {
-          console.log("User created or fetched:", user);
-        })
-        .catch((error) => {
-          console.error("Error in user creation:", error);
-        });
+      createUser(userEmail || "");
     }
   }, [currentAccount, sessionSigs]);
   useEffect(() => {
