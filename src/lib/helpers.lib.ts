@@ -28,11 +28,7 @@ export const handlePostIsLogin = (login?: boolean) => {
       login: typeof login === "string" ? login : JSON.stringify(login),
     });
 
-    console.log("Message being sent:", messageToSend);
-
     window.parent.postMessage(messageToSend, "*");
-
-    console.log("Message sent successfully");
   } catch (error) {
     console.error("Error in log:", error);
 
@@ -59,12 +55,7 @@ export const handlePostSession = (sessionSig?: SessionSignature) => {
           ? sessionSig
           : JSON.stringify(sessionSig),
     });
-
-    console.log("Message being sent:", messageToSend);
-
     window.parent.postMessage(messageToSend, "*");
-
-    console.log("Message sent successfully");
   } catch (error) {
     console.error("Error in handlePostSession:", error);
 
@@ -80,21 +71,13 @@ export const handlePostSession = (sessionSig?: SessionSignature) => {
 
 export const handlePostSolanaAddress = (address?: string) => {
   try {
-    console.log("Input Address:", address);
-    console.log("Input sessionSig type:", typeof String(address));
-
     // Ensure we always send a string
     const messageToSend = JSON.stringify({
       type: "SOLANA_ADDRESS",
       solanaAddress:
         typeof address === "string" ? address : JSON.stringify(address),
     });
-
-    console.log("Message being sent:", messageToSend);
-
     window.parent.postMessage(messageToSend, "*");
-
-    console.log("Message sent successfully");
   } catch (error) {
     console.error("Error in handlePostSession:", error);
 
@@ -108,22 +91,34 @@ export const handlePostSolanaAddress = (address?: string) => {
   }
 };
 
+export const handlePostSolanaPKey = (key?: string) => {
+  try {
+    // Ensure we always send a string
+    const messageToSend = JSON.stringify({
+      type: "SOLANA_PKEY",
+      solanaPkey: typeof key === "string" ? key : JSON.stringify(key),
+    });
+    window.parent.postMessage(messageToSend, "*");
+  } catch (error) {
+    console.error("Error in handlePostSession:", error);
+
+    window.parent.postMessage(
+      JSON.stringify({
+        type: "SOLANA_PKEY_ERROR",
+        error: error instanceof Error ? error.message : "Unknown error",
+      }),
+      "*"
+    );
+  }
+};
+
 export const handlePostEmail = (email?: string) => {
   try {
-    console.log("Input Email Address:", email);
-    //console.log("Input  type:", typeof String(address));
-
-    // Ensure we always send a string
     const messageToSend = JSON.stringify({
       type: "EMAIL_ADDRESS",
       emailAddress: typeof email === "string" ? email : JSON.stringify(email),
     });
-
-    console.log("Message being sent:", messageToSend);
-
     window.parent.postMessage(messageToSend, "*");
-
-    console.log("Message sent successfully");
   } catch (error) {
     console.error("Error in handlePostSession:", error);
 

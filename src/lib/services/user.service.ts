@@ -30,6 +30,7 @@ export class UserService {
     }
   }
 
+  
   static async GetUserByMail(email: string) {
     try {
       const userData = await axios.get(

@@ -4,8 +4,38 @@ import { LIT_NETWORK } from "@lit-protocol/constants";
 import { api } from "@lit-protocol/wrapped-keys";
 import { LIT_NETWORKS_KEYS, SessionSigsMap } from "@lit-protocol/types";
 
-const { generatePrivateKey, listEncryptedKeyMetadata } = api;
+const { generatePrivateKey, listEncryptedKeyMetadata, exportPrivateKey } = api;
 
+export const getUserPrivateKey = async (
+  session: SessionSigsMap,
+  evmOrSolana: "evm" | "solana",
+  id: string
+) => {
+  let litNodeClient: LitNodeClient;
+
+  try {
+    litNodeClient = new LitNodeClient({
+      litNetwork: LIT_NETWORK.DatilDev as LIT_NETWORKS_KEYS,
+      debug: false,
+    });
+    await litNodeClient.connect();
+
+    const response = await exportPrivateKey({
+      litNodeClient,
+      network: evmOrSolana,
+      pkpSessionSigs: session,
+      id: id, //
+    });
+
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  } finally {
+    litNodeClient!.disconnect();
+  }
+};
 export const generateWrappedKey = async (
   session: SessionSigsMap,
   evmOrSolana: "evm" | "solana",
