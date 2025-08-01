@@ -7,10 +7,10 @@ interface AuthMethodsProps {
 const AuthMethods = ({ setView, isSignup }: AuthMethodsProps) => {
   return (
     <>
-      <div className="bg-white/90 p-1.5 w-[90%] ml-auto mr-auto mt-9 h-12 rounded-xl mb-4">
+      <div className="bg-white/90 py-4 px-3 w-[90%] ml-auto mr-auto mt-9 h-16 rounded-xl mb-4">
         <button
           type="button"
-          className="btn btn--outline flex justify-between items-center w-full"
+          className=" py-1 bg-auto flex justify-between items-center w-full"
           onClick={() => setView("email")}
         >
           <div className="btn__icon">

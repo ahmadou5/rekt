@@ -90,20 +90,18 @@ SignUpHeader.displayName = "SignUpHeader";
 
 // IMPROVEMENT: Memoized login prompt component
 const LoginPrompt = memo<{ onClick: () => void }>(({ onClick }) => (
-  <div className="mt-12">
-    <button
-      className="text-white w-[100%] text-xl flex items-center justify-center font-extralight transition-colors hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-lg p-2"
-      onClick={onClick}
-      type="button"
-      aria-label="Go to login page"
-    >
-      <p className="text-white/70 font-bold ml-auto mr-5">
-        Have an account?
-        <span className="ml-2 text-blue-500 hover:text-blue-400 transition-colors">
+  <div className="mt-12 w-[100%] flex items-center justify-center">
+    <div className="w-[90%] ml-auto mr-auto mb-4 h-16 bg-white/0 rounded-xl flex items-center justify-center">
+      <p className="text-white/90 text-sm">
+        {`Already Have an account?`}
+        <span
+          className="text-blue-500 ml-2 mr-2 hover:text-blue-400 transition-colors cursor-pointer"
+          onClick={onClick}
+        >
           Sign in
         </span>
       </p>
-    </button>
+    </div>
   </div>
 ));
 

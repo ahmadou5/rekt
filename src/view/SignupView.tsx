@@ -25,7 +25,7 @@ export default function SignUpView() {
     finalizeSignUp,
     handleRetry,
     startAuth,
-    startAccountCreation,
+
     startSessionCreation,
     isValidSolanaAddress,
   } = useSignUpFlow();
@@ -70,17 +70,9 @@ export default function SignUpView() {
       // For WebAuthn, account creation is handled by registerWithWebAuthn
       if (authMethod.authMethodType !== AuthMethodType.WebAuthn) {
         createAccount(authMethod);
-        startAccountCreation();
       }
     }
-  }, [
-    authMethod,
-    signUpState.phase,
-    startAuth,
-    startAccountCreation,
-    createAccount,
-    router,
-  ]);
+  }, [authMethod, signUpState.phase, startAuth, createAccount, router]);
 
   // Start session creation when account is ready
   useEffect(() => {

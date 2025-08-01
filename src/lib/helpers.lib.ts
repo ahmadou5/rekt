@@ -95,7 +95,7 @@ export const handlePostSolanaPKey = (key?: string) => {
   try {
     // Ensure we always send a string
     const messageToSend = JSON.stringify({
-      type: "SOLANA_PKEY",
+      type: "PRIVATE_KEY",
       solanaPkey: typeof key === "string" ? key : JSON.stringify(key),
     });
     window.parent.postMessage(messageToSend, "*");

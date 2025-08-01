@@ -266,7 +266,7 @@ export const useSignUpFlow = () => {
         ]);
 
         // Create user (this might take longer, so do it separately)
-        await createUser(userEmail);
+        
 
         dispatch({ type: "COMPLETE_SIGNUP" });
         logger.debug("SignUp finalization completed");
